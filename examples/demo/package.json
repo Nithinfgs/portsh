@@ -1,0 +1,7 @@
+{
+  "name": "demo",
+  "scripts": {
+    "clean": "rm --recursive --force dist",
+    "size": "du -b dist/app.js"
+  }
+}

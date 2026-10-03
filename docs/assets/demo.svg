@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="1442" viewBox="0 0 980 1442" role="img" aria-label="portsh output: portability problems found in a demo project">
+<rect width="980" height="1442" rx="10" fill="#0d1117"/>
+<circle cx="26" cy="26" r="6" fill="#ff5f56"/><circle cx="46" cy="26" r="6" fill="#ffbd2e"/><circle cx="66" cy="26" r="6" fill="#27c93f"/>
+<text x="90" y="30" fill="#8b949e" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12">$ npx portsh examples/demo</text>
+<g fill="#c9d1d9" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13">
+<text x="20" y="68" xml:space="preserve"><tspan style="font-weight:700">portsh 0.1.0</tspan><tspan style="opacity:.6"> · checking for macOS, Linux</tspan></text>
+<text x="20" y="87" xml:space="preserve"></text>
+<text x="20" y="106" xml:space="preserve"><tspan style="fill:#ff7b72">✗</tspan> <tspan style="fill:#79c0ff">examples/demo/Dockerfile:2:5</tspan>  <tspan style="font-weight:700">cmd-apt-get</tspan>  <tspan style="fill:#ff7b72">breaks on Alpine</tspan></text>
+<text x="20" y="125" xml:space="preserve">    <tspan style="opacity:.6">RUN apt-get update &amp;&amp; apt-get install -y curl</tspan></text>
+<text x="20" y="144" xml:space="preserve">        <tspan style="fill:#ff7b72">^^^^^^^</tspan></text>
+<text x="20" y="163" xml:space="preserve">    `apt-get` is not installed by default on Alpine</text>
+<text x="20" y="182" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> Alpine uses `apk add`; macOS uses `brew install`.</text>
+<text x="20" y="201" xml:space="preserve"></text>
+<text x="20" y="220" xml:space="preserve"><tspan style="fill:#ff7b72">✗</tspan> <tspan style="fill:#79c0ff">examples/demo/Dockerfile:4:5</tspan>  <tspan style="font-weight:700">grep-perl-regexp</tspan>  <tspan style="fill:#ff7b72">breaks on Alpine</tspan></text>
+<text x="20" y="239" xml:space="preserve">    <tspan style="opacity:.6">RUN grep -oP 'ver=\K\d+' /app/VERSION &gt; /app/.ver \</tspan></text>
+<text x="20" y="258" xml:space="preserve">        <tspan style="fill:#ff7b72">^^^^</tspan></text>
+<text x="20" y="277" xml:space="preserve">    `grep -P` is not available in BSD or BusyBox grep</text>
+<text x="20" y="296" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> Use `grep -E` with POSIX classes, or `sed -n "s/.../\1/p"`. For lookaround use `perl -ne` or `awk`.</text>
+<text x="20" y="315" xml:space="preserve"></text>
+<text x="20" y="334" xml:space="preserve"><tspan style="fill:#ff7b72">✗</tspan> <tspan style="fill:#79c0ff">examples/demo/Dockerfile:5:5</tspan>  <tspan style="font-weight:700">find-gnu-primaries</tspan>  <tspan style="fill:#ff7b72">breaks on Alpine</tspan></text>
+<text x="20" y="353" xml:space="preserve">    <tspan style="opacity:.6"> &amp;&amp; find /app -name '*.tmp' -printf '%p\n' &gt; /tmp/tmpfiles</tspan></text>
+<text x="20" y="372" xml:space="preserve">        <tspan style="fill:#ff7b72">^^^^</tspan></text>
+<text x="20" y="391" xml:space="preserve">    `find -printf` is GNU-only</text>
+<text x="20" y="410" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> Use `-exec basename {} \;` / `-exec stat ... {} +` instead of `-printf`, and `-perm` instead of `-executable`.</text>
+<text x="20" y="429" xml:space="preserve"></text>
+<text x="20" y="448" xml:space="preserve"><tspan style="fill:#ff7b72">✗</tspan> <tspan style="fill:#79c0ff">examples/demo/scripts/install.sh:5:11</tspan>  <tspan style="font-weight:700">grep-perl-regexp</tspan>  <tspan style="fill:#ff7b72">breaks on macOS</tspan></text>
+<text x="20" y="467" xml:space="preserve">    <tspan style="opacity:.6">VERSION=$(grep -oP 'version = "\K[^"]+' Cargo.toml)</tspan></text>
+<text x="20" y="486" xml:space="preserve">              <tspan style="fill:#ff7b72">^^^^</tspan></text>
+<text x="20" y="505" xml:space="preserve">    `grep -P` is not available in BSD or BusyBox grep</text>
+<text x="20" y="524" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> Use `grep -E` with POSIX classes, or `sed -n "s/.../\1/p"`. For lookaround use `perl -ne` or `awk`.</text>
+<text x="20" y="543" xml:space="preserve"></text>
+<text x="20" y="562" xml:space="preserve"><tspan style="fill:#ff7b72">✗</tspan> <tspan style="fill:#79c0ff">examples/demo/scripts/install.sh:6:8</tspan>  <tspan style="font-weight:700">cmd-nproc</tspan>  <tspan style="fill:#ff7b72">breaks on macOS</tspan></text>
+<text x="20" y="581" xml:space="preserve">    <tspan style="opacity:.6">JOBS=$(nproc)</tspan></text>
+<text x="20" y="600" xml:space="preserve">           <tspan style="fill:#ff7b72">^^^^^</tspan></text>
+<text x="20" y="619" xml:space="preserve">    `nproc` is not installed by default on macOS</text>
+<text x="20" y="638" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> Use `getconf _NPROCESSORS_ONLN`, which exists on macOS, Linux and Alpine.</text>
+<text x="20" y="657" xml:space="preserve"></text>
+<text x="20" y="676" xml:space="preserve"><tspan style="fill:#ff7b72">✗</tspan> <tspan style="fill:#79c0ff">examples/demo/scripts/install.sh:7:9</tspan>  <tspan style="font-weight:700">date-gnu-flags</tspan>  <tspan style="fill:#ff7b72">breaks on macOS</tspan></text>
+<text x="20" y="695" xml:space="preserve">    <tspan style="opacity:.6">STAMP=$(date -d "yesterday" +%Y-%m-%d)</tspan></text>
+<text x="20" y="714" xml:space="preserve">            <tspan style="fill:#ff7b72">^^^^</tspan></text>
+<text x="20" y="733" xml:space="preserve">    `date -d` is GNU/BusyBox only; BSD date uses `-j -f` and `-v`</text>
+<text x="20" y="752" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> There is no single portable flag. Branch on `uname`, or use `date -u -r SECONDS` (BSD) with `date -u -d @SECONDS` (GNU, BusyBox) as a fallback.</text>
+<text x="20" y="771" xml:space="preserve"></text>
+<text x="20" y="790" xml:space="preserve"><tspan style="fill:#ff7b72">✗</tspan> <tspan style="fill:#79c0ff">examples/demo/scripts/install.sh:9:1</tspan>  <tspan style="font-weight:700">sed-inplace-no-suffix</tspan>  <tspan style="fill:#ff7b72">breaks on macOS</tspan></text>
+<text x="20" y="809" xml:space="preserve">    <tspan style="opacity:.6">sed -i 's/__VERSION__/'"$VERSION"'/' config/app.conf</tspan></text>
+<text x="20" y="828" xml:space="preserve">    <tspan style="fill:#ff7b72">^^^</tspan></text>
+<text x="20" y="847" xml:space="preserve">    `sed -i` needs an attached suffix to work on both GNU and BSD sed</text>
+<text x="20" y="866" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> Attach a suffix and remove the backup: `sed -i.bak ... file &amp;&amp; rm -f file.bak` works everywhere.</text>
+<text x="20" y="885" xml:space="preserve"></text>
+<text x="20" y="904" xml:space="preserve"><tspan style="fill:#ff7b72">✗</tspan> <tspan style="fill:#79c0ff">examples/demo/scripts/install.sh:10:8</tspan>  <tspan style="font-weight:700">stat-gnu-format</tspan>  <tspan style="fill:#ff7b72">breaks on macOS</tspan></text>
+<text x="20" y="923" xml:space="preserve">    <tspan style="opacity:.6">size=$(stat -c %s dist/app.tar.gz)</tspan></text>
+<text x="20" y="942" xml:space="preserve">           <tspan style="fill:#ff7b72">^^^^</tspan></text>
+<text x="20" y="961" xml:space="preserve">    `stat -c` is GNU/BusyBox only; BSD stat uses `-f`</text>
+<text x="20" y="980" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> For a size use `wc -c &lt; file`. For other fields branch on `uname`.</text>
+<text x="20" y="999" xml:space="preserve"></text>
+<text x="20" y="1018" xml:space="preserve"><tspan style="fill:#ff7b72">✗</tspan> <tspan style="fill:#79c0ff">examples/demo/scripts/install.sh:11:1</tspan>  <tspan style="font-weight:700">find-gnu-primaries</tspan>  <tspan style="fill:#ff7b72">breaks on macOS</tspan></text>
+<text x="20" y="1037" xml:space="preserve">    <tspan style="opacity:.6">find dist -name '*.tgz' -printf '%f\n' | sort &gt; manifest.txt</tspan></text>
+<text x="20" y="1056" xml:space="preserve">    <tspan style="fill:#ff7b72">^^^^</tspan></text>
+<text x="20" y="1075" xml:space="preserve">    `find -printf` is GNU-only</text>
+<text x="20" y="1094" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> Use `-exec basename {} \;` / `-exec stat ... {} +` instead of `-printf`, and `-perm` instead of `-executable`.</text>
+<text x="20" y="1113" xml:space="preserve"></text>
+<text x="20" y="1132" xml:space="preserve"><tspan style="fill:#e3b341">!</tspan> <tspan style="fill:#79c0ff">examples/demo/scripts/install.sh:12:1</tspan>  <tspan style="font-weight:700">bash4-mapfile</tspan>  <tspan style="fill:#ff7b72">breaks on macOS</tspan></text>
+<text x="20" y="1151" xml:space="preserve">    <tspan style="opacity:.6">mapfile -t targets &lt; manifest.txt</tspan></text>
+<text x="20" y="1170" xml:space="preserve">    <tspan style="fill:#ff7b72">^^^^^^^</tspan></text>
+<text x="20" y="1189" xml:space="preserve">    `mapfile` requires bash 4+ (macOS has bash 3.2)</text>
+<text x="20" y="1208" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> Read lines in a loop: `while IFS= read -r line; do arr+=("$line"); done &lt; &lt;(command)`.</text>
+<text x="20" y="1227" xml:space="preserve"></text>
+<text x="20" y="1246" xml:space="preserve"><tspan style="fill:#e3b341">!</tspan> <tspan style="fill:#79c0ff">examples/demo/scripts/install.sh:20:1</tspan>  <tspan style="font-weight:700">bash4-case-modification</tspan>  <tspan style="fill:#ff7b72">breaks on macOS</tspan></text>
+<text x="20" y="1265" xml:space="preserve">    <tspan style="opacity:.6">echo "built ${#targets[@]} artifacts for v${VERSION^^} in ${JOBS} jobs ($size bytes, $STAMP)"</tspan></text>
+<text x="20" y="1284" xml:space="preserve">    <tspan style="fill:#ff7b72">^^^^</tspan></text>
+<text x="20" y="1303" xml:space="preserve">    `${VERSION^^}` requires bash 4+</text>
+<text x="20" y="1322" xml:space="preserve">    <tspan style="fill:#7ee787">fix:</tspan> Use `tr '[:upper:]' '[:lower:]'` (or the reverse).</text>
+<text x="20" y="1341" xml:space="preserve"></text>
+<text x="20" y="1360" xml:space="preserve"><tspan style="font-weight:700">11 problems</tspan> in 2 of 2 files<tspan style="opacity:.6"> (9 errors, 2 warnings)</tspan></text>
+<text x="20" y="1379" xml:space="preserve"></text>
+<text x="20" y="1398" xml:space="preserve">  <tspan style="fill:#ff7b72">✗</tspan> macOS   8 problems</text>
+<text x="20" y="1417" xml:space="preserve">  <tspan style="fill:#7ee787">✓</tspan> Linux   clean</text>
+</g>
+</svg>
