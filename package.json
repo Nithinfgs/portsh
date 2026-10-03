@@ -1,0 +1,63 @@
+{
+  "name": "portsh",
+  "version": "0.1.0",
+  "description": "Will this shell script run on macOS, Linux and Alpine? Finds GNU/BSD/BusyBox differences in scripts, Makefiles, CI workflows, Dockerfiles and READMEs.",
+  "type": "module",
+  "bin": {
+    "portsh": "bin/portsh.js"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "docs/rules.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "typecheck": "tsc -p tsconfig.json",
+    "verify": "node bin/portsh.js verify",
+    "docs": "node scripts/gen-rules-doc.js && node scripts/render-svg.js",
+    "check": "npm run lint && npm run typecheck && npm test"
+  },
+  "keywords": [
+    "shell",
+    "bash",
+    "posix",
+    "portability",
+    "macos",
+    "linux",
+    "alpine",
+    "busybox",
+    "gnu",
+    "bsd",
+    "linter",
+    "cli",
+    "ci",
+    "makefile",
+    "dockerfile"
+  ],
+  "author": "Nithinfgs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nithinfgs/portsh.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Nithinfgs/portsh/issues"
+  },
+  "homepage": "https://github.com/Nithinfgs/portsh#readme",
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2"
+  }
+}

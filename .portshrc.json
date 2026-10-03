@@ -1,0 +1,3 @@
+{
+  "exclude": ["examples/demo/**", "test/**", "docs/rules.md"]
+}
