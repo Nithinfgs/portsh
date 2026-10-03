@@ -106,7 +106,7 @@ else
 fi
 ```
 
-portsh reports `nproc`, `grep -P` and `sed -i`, and leaves the `pbcopy` / `xclip` branches alone because each is guarded for the platform it runs on. A runnable project that exercises every file type lives in [examples/demo](examples/demo): `npx github:Nithinfgs/portsh examples/demo`.
+portsh reports `nproc`, `grep -P` and `sed -i`, and leaves the `pbcopy` / `xclip` branches alone because each is guarded for the platform it runs on. A small project that exercises every file type (script, Makefile, workflow, Dockerfile, `package.json`, Markdown) lives in [examples/demo](examples/demo). Clone the repo and run `node bin/portsh.js examples/demo`.
 
 ## Verify the rules on your machine
 

@@ -26,6 +26,7 @@
     "typecheck": "tsc -p tsconfig.json",
     "verify": "node bin/portsh.js verify",
     "docs": "node scripts/gen-rules-doc.js && node scripts/render-svg.js",
+    "dogfood": "node bin/portsh.js . --fail-on warn --exclude 'examples/**' --exclude 'test/**' --exclude README.md --exclude docs/rules.md",
     "check": "npm run lint && npm run typecheck && npm test"
   },
   "keywords": [

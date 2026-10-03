@@ -11,8 +11,8 @@ const bin = join(root, 'bin', 'portsh.js');
 /** @type {string} */
 let out;
 try {
-  out = execFileSync(process.execPath, [bin, 'examples/demo/scripts', 'examples/demo/Dockerfile', '--color'], {
-    cwd: root,
+  out = execFileSync(process.execPath, [bin, 'setup.sh', '--color'], {
+    cwd: join(root, 'examples', 'hero'),
     encoding: 'utf8',
     env: { ...process.env, FORCE_COLOR: '1' },
   });
@@ -65,10 +65,10 @@ const width = 980;
 const height = pad * 2 + 34 + lines.length * lh;
 const body = lines.map((l, i) => `<text x="${pad}" y="${pad + 34 + (i + 1) * lh - 5}" xml:space="preserve">${spans(l)}</text>`).join('\n');
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="portsh output: portability problems found in a demo project">
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="portsh output: portability problems found for a short example script">
 <rect width="${width}" height="${height}" rx="10" fill="#0d1117"/>
 <circle cx="${pad + 6}" cy="${pad + 6}" r="6" fill="#ff5f56"/><circle cx="${pad + 26}" cy="${pad + 6}" r="6" fill="#ffbd2e"/><circle cx="${pad + 46}" cy="${pad + 6}" r="6" fill="#27c93f"/>
-<text x="${pad + 70}" y="${pad + 10}" fill="#8b949e" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12">$ npx portsh examples/demo</text>
+<text x="${pad + 70}" y="${pad + 10}" fill="#8b949e" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12">$ npx portsh setup.sh</text>
 <g fill="#c9d1d9" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13">
 ${body}
 </g>

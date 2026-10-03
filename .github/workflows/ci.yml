@@ -27,7 +27,7 @@ jobs:
       - run: npm test
       - run: node scripts/gen-rules-doc.js --check
       - name: Dogfood
-        run: node bin/portsh.js . --fail-on warn
+        run: npm run dogfood
 
   verify:
     name: verify rules on ${{ matrix.os }}
