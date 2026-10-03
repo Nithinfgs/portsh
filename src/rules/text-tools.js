@@ -319,7 +319,7 @@ export const textToolRules = [
         bad: 'echo aaa | awk \'{print gensub(/a/,"b","g")}\'',
         good: 'echo aaa | awk \'{gsub(/a/,"b"); print}\'',
         expect: 'bbb',
-        fails: ['macos', 'alpine'],
+        fails: ['macos'],
       },
       {
         bad: "awk 'BEGIN{a[1]=2;a[2]=1;n=asort(a);print a[1]}'",

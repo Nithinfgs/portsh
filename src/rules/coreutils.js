@@ -34,6 +34,7 @@ const LONG_OPTION_TABLE = [
   },
   {
     cmd: 'rm',
+    alpine: true,
     opts: null,
     fix: 'Use `-f`, `-r`, `-v`.',
     probe: { setup: SETUP_HELLO, bad: 'rm --force f.txt && echo ok', good: 'rm -f f.txt && echo ok', expect: 'ok' },
@@ -46,6 +47,7 @@ const LONG_OPTION_TABLE = [
   },
   {
     cmd: 'ln',
+    alpine: true,
     opts: null,
     fix: 'Use `-s`, `-f`, `-n`.',
     probe: { setup: SETUP_HELLO, bad: 'ln --symbolic --force f.txt l && cat l', good: 'ln -sf f.txt l && cat l', expect: 'hello' },
@@ -58,18 +60,21 @@ const LONG_OPTION_TABLE = [
   },
   {
     cmd: 'df',
+    alpine: true,
     opts: null,
     fix: 'Use `-h`, `-k`, `-P`.',
     probe: { bad: 'df --human-readable / >/dev/null && echo ok', good: 'df -h / >/dev/null && echo ok', expect: 'ok' },
   },
   {
     cmd: 'cut',
+    alpine: true,
     opts: null,
     fix: 'Use `-d`, `-f`, `-c`.',
     probe: { setup: "printf 'a,b\\n' > f.txt", bad: 'cut --delimiter=, --fields=1 f.txt', good: 'cut -d, -f1 f.txt', expect: 'a' },
   },
   {
     cmd: 'wc',
+    alpine: true,
     opts: null,
     fix: 'Use `-l`, `-w`, `-c`.',
     probe: { setup: SETUP_HELLO, bad: "wc --lines < f.txt | tr -d ' '", good: "wc -l < f.txt | tr -d ' '", expect: '1' },
@@ -82,6 +87,7 @@ const LONG_OPTION_TABLE = [
   },
   {
     cmd: 'chmod',
+    alpine: true,
     opts: null,
     fix: 'Use `-R`, `-v`.',
     probe: { setup: 'mkdir a', bad: 'chmod --recursive 755 a && echo ok', good: 'chmod -R 755 a && echo ok', expect: 'ok' },
@@ -94,6 +100,7 @@ const LONG_OPTION_TABLE = [
   },
   {
     cmd: 'readlink',
+    alpine: true,
     opts: null,
     fix: 'Use `readlink -f` (macOS 12.3+, Linux, Alpine).',
     probe: {
@@ -117,6 +124,7 @@ const LONG_OPTION_TABLE = [
   },
   {
     cmd: 'basename',
+    alpine: true,
     opts: null,
     fix: 'Use the POSIX form `basename NAME SUFFIX`.',
     probe: { bad: 'basename --suffix=.txt f.txt', good: 'basename f.txt .txt', expect: 'f' },
@@ -145,12 +153,14 @@ const LONG_OPTION_TABLE = [
   },
   {
     cmd: 'paste',
+    alpine: true,
     opts: null,
     fix: 'Use `-s` and `-d`.',
     probe: { setup: "printf 'a\\nb\\n' > f.txt", bad: 'paste --serial f.txt', good: 'paste -s f.txt', expect: 'a\tb' },
   },
   {
     cmd: 'ls',
+    alpine: true,
     opts: null,
     except: ['--color', '--help', '--version'],
     fix: 'Use `-A`, `-h`, `-F`, `-t`. For ordering use `sort`.',
@@ -158,6 +168,7 @@ const LONG_OPTION_TABLE = [
   },
   {
     cmd: 'mktemp',
+    alpine: true,
     opts: ['--suffix', '--tmpdir'],
     fix: 'Use `mktemp "${TMPDIR:-/tmp}/name.XXXXXX"` and rename if a suffix is needed.',
     probe: {
@@ -168,6 +179,7 @@ const LONG_OPTION_TABLE = [
   },
   {
     cmd: 'tar',
+    alpine: true,
     opts: ['--transform', '--xform', '--wildcards', '--one-top-level', '--sort'],
     fix: 'Use `tar -tf archive | grep ...`, or `-s` (BSD) vs `--transform` (GNU) behind a uname check.',
     probe: {
