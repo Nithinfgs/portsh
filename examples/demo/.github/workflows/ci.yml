@@ -1,0 +1,17 @@
+name: ci
+on: [push]
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump version
+        run: |
+          sed -i "s/^version = .*/version = \"${{ github.ref_name }}\"/" Cargo.toml
+          echo "cpus: $(nproc)"
+      - name: Linux only
+        if: runner.os == 'Linux'
+        run: free -m
