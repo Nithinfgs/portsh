@@ -12,14 +12,14 @@ Use `portsh explain <rule-id>` for details, and silence a finding with `# portsh
 | [`sed-gnu-flags`](#sed-gnu-flags) | macOS | GNU-only sed options | error |
 | [`sed-gnu-escapes`](#sed-gnu-escapes) | macOS | GNU regex escapes in sed (`\s`, `\w`) | error |
 | [`sed-oneline-aic`](#sed-oneline-aic) | macOS | One-line `a`, `i`, `c` commands in sed | error |
-| [`sed-step-address`](#sed-step-address) | macOS | GNU sed address forms (`first~step`, `addr,+N`) | error |
+| [`sed-step-address`](#sed-step-address) | macOS, Alpine | GNU sed address forms (`first~step`, `addr,+N`) | error |
 | [`grep-perl-regexp`](#grep-perl-regexp) | macOS, Alpine | `grep -P` (Perl regex) | error |
 | [`find-gnu-primaries`](#find-gnu-primaries) | macOS | GNU-only `find` primaries | error |
 | [`find-bsd-regex-flag`](#find-bsd-regex-flag) | Linux, Alpine | `find -E` (BSD extended regex) | error |
-| [`xargs-delimiter`](#xargs-delimiter) | macOS | `xargs -d` | error |
+| [`xargs-delimiter`](#xargs-delimiter) | macOS, Alpine | `xargs -d` | error |
 | [`xargs-replace-J`](#xargs-replace-J) | Linux, Alpine | `xargs -J` (BSD) | error |
-| [`awk-gawk-extensions`](#awk-gawk-extensions) | macOS | gawk-only functions in awk | error |
-| [`gnu-long-options`](#gnu-long-options) | macOS | GNU long options on BSD tools | error |
+| [`awk-gawk-extensions`](#awk-gawk-extensions) | macOS, Alpine | gawk-only functions in awk | error |
+| [`gnu-long-options`](#gnu-long-options) | macOS, Alpine | GNU long options on BSD tools | error |
 | [`date-gnu-flags`](#date-gnu-flags) | macOS | `date -d` and other GNU date options | error |
 | [`date-bsd-flags`](#date-bsd-flags) | Linux, Alpine | `date -v` / `date -j` (BSD) | error |
 | [`stat-gnu-format`](#stat-gnu-format) | macOS | `stat -c` / `--format` | error |
@@ -28,7 +28,7 @@ Use `portsh explain <rule-id>` for details, and silence a finding with `# portsh
 | [`du-apparent-bytes`](#du-apparent-bytes) | macOS | `du -b` | error |
 | [`ln-gnu-flags`](#ln-gnu-flags) | macOS | `ln -r` / `ln -T` | error |
 | [`install-create-dirs`](#install-create-dirs) | macOS | `install -D` | error |
-| [`touch-relative-date`](#touch-relative-date) | macOS | `touch -d` with a relative date | error |
+| [`touch-relative-date`](#touch-relative-date) | macOS, Alpine | `touch -d` with a relative date | error |
 | [`mktemp-t-prefix`](#mktemp-t-prefix) | Linux, Alpine | `mktemp -t prefix` (BSD) | error |
 | [`getopt-long-options`](#getopt-long-options) | macOS | external `getopt` with long options | error |
 | [`tail-reverse`](#tail-reverse) | Linux, Alpine | `tail -r` (BSD) | error |
@@ -186,9 +186,9 @@ hello'
 
 ## sed-step-address
 
-**GNU sed address forms (`first~step`, `addr,+N`)** · breaks on macOS · error
+**GNU sed address forms (`first~step`, `addr,+N`)** · breaks on macOS, Alpine · error
 
-The `first~step`, `addr,+N`, `addr,~N` and `0,/re/` addresses are GNU extensions. BSD sed reports an unknown command.
+The `first~step`, `addr,+N`, `addr,~N` and `0,/re/` addresses are GNU extensions. BSD sed and BusyBox sed report an unknown command.
 
 **Fix:** Use `awk` (`NR % 2 == 1`) or restructure with line numbers.
 
@@ -250,9 +250,9 @@ find . -maxdepth 1 -name 'f.txt'
 
 ## xargs-delimiter
 
-**`xargs -d`** · breaks on macOS · error
+**`xargs -d`** · breaks on macOS, Alpine · error
 
-BSD xargs has no `-d` / `--delimiter`.
+BSD xargs (macOS) and BusyBox xargs (Alpine) have no `-d` / `--delimiter`.
 
 **Fix:** Use `tr` to convert the delimiter to newlines (`tr "," "\n" | xargs ...`) or `-0` with NUL-separated input.
 
@@ -282,9 +282,9 @@ printf 'a\n' | xargs -I % echo % x
 
 ## awk-gawk-extensions
 
-**gawk-only functions in awk** · breaks on macOS · error
+**gawk-only functions in awk** · breaks on macOS, Alpine · error
 
-macOS ships the one-true-awk. It lacks `gensub`, `strftime`, `systime`, `mktime`, `asort`, `asorti`, `strtonum` and `-i inplace`; calling them is a fatal "undefined function". BusyBox awk lacks most of them too.
+macOS ships the one-true-awk. It lacks `gensub`, `strftime`, `systime`, `mktime`, `asort`, `asorti`, `strtonum` and `-i inplace`; calling them is a fatal "undefined function". BusyBox awk (Alpine) lacks `strtonum`, `asort` and `asorti`.
 
 **Fix:** Use `gsub`, `date`, `sort`, or `printf "%d"` in POSIX awk, or install gawk explicitly and call it as `gawk`.
 
@@ -298,9 +298,9 @@ printf '%d\n' 0x10
 
 ## gnu-long-options
 
-**GNU long options on BSD tools** · breaks on macOS · error
+**GNU long options on BSD tools** · breaks on macOS, Alpine · error
 
-Most BSD utilities on macOS (cp, mv, rm, mkdir, ln, du, df, cut, wc, touch, chmod, ps, ...) accept only short flags. `rm --force` fails with "illegal option -- -".
+Most BSD utilities on macOS (cp, mv, rm, mkdir, ln, du, df, cut, wc, touch, chmod, ps, ...) accept only short flags, and several BusyBox tools on Alpine (rm, ln, df, cut, wc, chmod, ls, tar, ...) do too. `rm --force` fails with "illegal option -- -".
 
 **Fix:** Use the short flag equivalent (see the per-command hint in the message).
 
@@ -442,9 +442,9 @@ mkdir -p out/sub && install f.txt out/sub/f.txt && echo ok
 
 ## touch-relative-date
 
-**`touch -d` with a relative date** · breaks on macOS · error
+**`touch -d` with a relative date** · breaks on macOS, Alpine · error
 
-BSD touch accepts `-d` only with an ISO-8601 timestamp, not strings like "2 days ago" or "yesterday".
+BSD touch (macOS) and BusyBox touch (Alpine) accept `-d` only with a fixed timestamp format, not strings like "2 days ago" or "yesterday".
 
 **Fix:** Use `touch -t YYYYMMDDhhmm` or compute the timestamp with `date`.
 

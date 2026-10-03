@@ -7,6 +7,7 @@ import { code, hasShort, optionArgs } from './helpers.js';
 /** @typedef {import('./helpers.js').Rule} Rule */
 /** @typedef {import('./helpers.js').Probe} Probe */
 /** @typedef {import('../parse.js').Command} Command */
+/** @typedef {import('../platforms.js').Platform} Platform */
 
 const SETUP_HELLO = "printf 'hello\\n' > f.txt";
 
@@ -14,7 +15,9 @@ const SETUP_HELLO = "printf 'hello\\n' > f.txt";
  * GNU long options on commands whose BSD versions only take short flags.
  * `opts: null` means every long option fails on macOS.
  *
- * @type {{cmd: string, opts: string[] | null, except?: string[], fix: string, probe: Probe}[]}
+ * `alpine: true` marks tools whose BusyBox build (Alpine) also rejects GNU long options; verified in CI.
+ *
+ * @type {{cmd: string, opts: string[] | null, alpine?: boolean, except?: string[], fix: string, probe: Probe}[]}
  */
 const LONG_OPTION_TABLE = [
   {
@@ -181,9 +184,9 @@ const longOptionRules = [
   {
     id: 'gnu-long-options',
     severity: 'error',
-    fails: ['macos'],
+    fails: ['macos', 'alpine'],
     title: 'GNU long options on BSD tools',
-    why: 'Most BSD utilities on macOS (cp, mv, rm, mkdir, ln, du, df, cut, wc, touch, chmod, ps, ...) accept only short flags. `rm --force` fails with "illegal option -- -".',
+    why: 'Most BSD utilities on macOS (cp, mv, rm, mkdir, ln, du, df, cut, wc, touch, chmod, ps, ...) accept only short flags, and several BusyBox tools on Alpine (rm, ln, df, cut, wc, chmod, ls, tar, ...) do too. `rm --force` fails with "illegal option -- -".',
     fix: 'Use the short flag equivalent (see the per-command hint in the message).',
     commands: [...new Set(LONG_OPTION_TABLE.map((e) => e.cmd))],
     check(cmd) {
@@ -204,7 +207,11 @@ const longOptionRules = [
       }
       return null;
     },
-    probes: LONG_OPTION_TABLE.map((e) => e.probe),
+    probes: LONG_OPTION_TABLE.map((e) =>
+      e.alpine
+        ? { ...e.probe, fails: /** @type {Platform[]} */ (['macos', 'alpine']) }
+        : { ...e.probe, fails: /** @type {Platform[]} */ (['macos']) },
+    ),
   },
 ];
 
@@ -374,9 +381,9 @@ export const coreutilsRules = [
   {
     id: 'touch-relative-date',
     severity: 'error',
-    fails: ['macos'],
+    fails: ['macos', 'alpine'],
     title: '`touch -d` with a relative date',
-    why: 'BSD touch accepts `-d` only with an ISO-8601 timestamp, not strings like "2 days ago" or "yesterday".',
+    why: 'BSD touch (macOS) and BusyBox touch (Alpine) accept `-d` only with a fixed timestamp format, not strings like "2 days ago" or "yesterday".',
     fix: 'Use `touch -t YYYYMMDDhhmm` or compute the timestamp with `date`.',
     commands: ['touch'],
     check(cmd) {

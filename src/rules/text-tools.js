@@ -146,9 +146,9 @@ export const textToolRules = [
   {
     id: 'sed-step-address',
     severity: 'error',
-    fails: ['macos'],
+    fails: ['macos', 'alpine'],
     title: 'GNU sed address forms (`first~step`, `addr,+N`)',
-    why: 'The `first~step`, `addr,+N`, `addr,~N` and `0,/re/` addresses are GNU extensions. BSD sed reports an unknown command.',
+    why: 'The `first~step`, `addr,+N`, `addr,~N` and `0,/re/` addresses are GNU extensions. BSD sed and BusyBox sed report an unknown command.',
     fix: 'Use `awk` (`NR % 2 == 1`) or restructure with line numbers.',
     commands: ['sed'],
     check(cmd) {
@@ -245,9 +245,9 @@ export const textToolRules = [
   {
     id: 'xargs-delimiter',
     severity: 'error',
-    fails: ['macos'],
+    fails: ['macos', 'alpine'],
     title: '`xargs -d`',
-    why: 'BSD xargs has no `-d` / `--delimiter`.',
+    why: 'BSD xargs (macOS) and BusyBox xargs (Alpine) have no `-d` / `--delimiter`.',
     fix: 'Use `tr` to convert the delimiter to newlines (`tr "," "\\n" | xargs ...`) or `-0` with NUL-separated input.',
     commands: ['xargs'],
     check(cmd) {
@@ -291,9 +291,9 @@ export const textToolRules = [
   {
     id: 'awk-gawk-extensions',
     severity: 'error',
-    fails: ['macos'],
+    fails: ['macos', 'alpine'],
     title: 'gawk-only functions in awk',
-    why: 'macOS ships the one-true-awk. It lacks `gensub`, `strftime`, `systime`, `mktime`, `asort`, `asorti`, `strtonum` and `-i inplace`; calling them is a fatal "undefined function". BusyBox awk lacks most of them too.',
+    why: 'macOS ships the one-true-awk. It lacks `gensub`, `strftime`, `systime`, `mktime`, `asort`, `asorti`, `strtonum` and `-i inplace`; calling them is a fatal "undefined function". BusyBox awk (Alpine) lacks `strtonum`, `asort` and `asorti`.',
     fix: 'Use `gsub`, `date`, `sort`, or `printf "%d"` in POSIX awk, or install gawk explicitly and call it as `gawk`.',
     commands: ['awk'],
     check(cmd) {
@@ -303,7 +303,7 @@ export const textToolRules = [
           if (new RegExp(`\\b${fn}\\s*\\(`).test(a)) {
             return {
               message: `${code(`${fn}()`)} is a gawk extension, not available in BSD awk`,
-              fails: fn === 'gensub' || fn === 'asort' || fn === 'asorti' ? ['macos', 'alpine'] : ['macos'],
+              fails: fn === 'strtonum' || fn === 'asort' || fn === 'asorti' ? ['macos', 'alpine'] : ['macos'],
               key: fn,
             };
           }
@@ -314,7 +314,7 @@ export const textToolRules = [
       return null;
     },
     probes: [
-      { bad: 'awk \'BEGIN{print strtonum("0x10")}\'', good: "printf '%d\\n' 0x10", expect: '16', fails: ['macos'] },
+      { bad: 'awk \'BEGIN{print strtonum("0x10")}\'', good: "printf '%d\\n' 0x10", expect: '16', fails: ['macos', 'alpine'] },
       {
         bad: 'echo aaa | awk \'{print gensub(/a/,"b","g")}\'',
         good: 'echo aaa | awk \'{gsub(/a/,"b"); print}\'',
